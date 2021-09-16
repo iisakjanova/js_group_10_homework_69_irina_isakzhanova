@@ -5,7 +5,7 @@ import {Grid, makeStyles, Typography} from "@material-ui/core";
 import {useHistory} from 'react-router-dom';
 
 import {reducer} from "../../store/reduser";
-import {addSearchParam, addTVShowsList, selectTVShow} from "../../store/actions";
+import {changeSearchParam, addTVShowsList} from "../../store/actions";
 import axiosApi from "../../axiosApi";
 
 const useStyles = makeStyles(theme => ({
@@ -21,28 +21,31 @@ const useStyles = makeStyles(theme => ({
 const initialState = {
     searchParam: '',
     shows: [],
-    selectedShow: '',
 };
 
 const filter = createFilterOptions();
 
-const TVShowSearch = () => {
+const TVShowSearch = (props) => {
     const classes = useStyles();
     const history = useHistory();
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const handleInputChange = (param) => {
-        dispatch(addSearchParam(param));
+    const handleInputChange = async (param) => {
+        dispatch(changeSearchParam(param));
+        const shows = await getShows();
+        dispatch(addTVShowsList(shows));
     };
 
     const handleSelectShow = value => {
-        dispatch(selectTVShow(value));
-        history.push(`/shows/${value.show.id}`);
+        if (value) {
+            history.push(`/shows/${value.show.id}`);
+        }
     };
 
     const getShows = useCallback( async () => {
         let shows = [];
+
         try {
             if (state.searchParam) {
                 const response = await axiosApi.get(`/search/shows?q=${state.searchParam}`);
@@ -60,14 +63,17 @@ const TVShowSearch = () => {
             const shows = await getShows();
             dispatch(addTVShowsList(shows));
         })();
+        return () => {
+
+        }
     }, [getShows]);
 
     return (
         <Grid container direction="row" className={classes.root}>
             <Typography variant="subtitle1" className={classes.label}>Search for TV Show</Typography>
             <Autocomplete
-                inputValue={state.searchParam}
-                value={state.selectedShow}
+                inputValue={props.inputValue || state.searchParam}
+                value={props.value || state.selectedShow}
                 onChange={(e, value) => handleSelectShow(value || '')}
                 onInputChange={(e, name) => handleInputChange(name || '')}
                 filterOptions={(options, params) => {

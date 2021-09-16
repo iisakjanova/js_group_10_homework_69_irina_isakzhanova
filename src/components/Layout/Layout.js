@@ -1,5 +1,6 @@
 import React from 'react';
 import {AppBar, makeStyles, Toolbar, Typography} from "@material-ui/core";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     title: {
@@ -22,7 +23,7 @@ const Layout = ({children}) => {
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
                     <Typography variant="h6" className={classes.title}>
-                        TV Shows
+                        <Link to="/">TV Shows</Link>
                     </Typography>
                 </Toolbar>
             </AppBar>

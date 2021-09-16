@@ -4,6 +4,7 @@ import {Backdrop, CircularProgress, Grid, makeStyles, Typography} from "@materia
 import {reducer} from "../../store/reduser";
 import axiosApi from "../../axiosApi";
 import {addTVShowInfo, showPreloader} from "../../store/actions";
+import TVShowSearch from "../TVShowSearch/TVShowSearch";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -15,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         flexWrap: "nowrap",
+        paddingTop: theme.spacing(5),
     }
 }));
 
@@ -64,19 +66,35 @@ const TVShow = ({match}) => {
                 :
                 state.info
                     ?
-                    <Grid container direction="row" spacing={2} className={classes.content}>
-                        <Grid item>
-                            <img src={state.info.image.medium} alt={state.info.name} />
+                    <>
+                        <TVShowSearch
+                            value={state.selectedShow || state.info.name}
+                        />
+                        <Grid container direction="row" spacing={4} className={classes.content}>
+                            <Grid item>
+                                <img src={state.info.image?.medium} alt={state.info.name} />
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h4">
+                                    {state.info.name}
+                                </Typography>
+                                <div dangerouslySetInnerHTML={{ __html: state.info.summary }} />
+                                <Typography variant="subtitle1">
+                                    <b>Language: </b> {state.info.language || ''}
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    <b>Rating: </b> {state.info.rating?.average}
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    <b>Country: </b> {state.info.network?.country.name}
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    <b>Official site: </b>
+                                    <a href={state.info.officialSite}>{state.info.officialSite || ''}</a>
+                                </Typography>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Typography variant="h4">{state.info.name}</Typography>
-                            <div dangerouslySetInnerHTML={{ __html: state.info.summary }} />
-                            <Typography variant="subtitle1"><b>Language: </b> {state.info.language}</Typography>
-                            <Typography variant="subtitle1"><b>Rating: </b> {state.info.rating.average}</Typography>
-                            <Typography variant="subtitle1"><b>Country: </b> {state.info.network.country.name}</Typography>
-                            <Typography variant="subtitle1"><b>Official site: </b> <a href={state.info.officialSite}>{state.info.officialSite}</a></Typography>
-                        </Grid>
-                    </Grid>
+                    </>
                     :
                     null
             }
