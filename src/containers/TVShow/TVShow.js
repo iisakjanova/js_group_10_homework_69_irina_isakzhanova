@@ -34,7 +34,9 @@ const TVShow = ({match}) => {
 
     const getShowInfo = useCallback( async () => {
         let info = [];
+
         dispatch(showPreloader(true));
+
         try {
             if (id) {
                 const response = await axiosApi.get(`/shows/${id}`);

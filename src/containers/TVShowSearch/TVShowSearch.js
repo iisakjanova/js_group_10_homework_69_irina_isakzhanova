@@ -32,9 +32,8 @@ const TVShowSearch = (props) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleInputChange = async (param) => {
+        console.log(param)
         dispatch(changeSearchParam(param));
-        const shows = await getShows();
-        dispatch(addTVShowsList(shows));
     };
 
     const handleSelectShow = value => {
@@ -73,7 +72,7 @@ const TVShowSearch = (props) => {
             <Typography variant="subtitle1" className={classes.label}>Search for TV Show</Typography>
             <Autocomplete
                 inputValue={props.inputValue || state.searchParam}
-                value={props.value || state.selectedShow}
+                value={props.value || ''}
                 onChange={(e, value) => handleSelectShow(value || '')}
                 onInputChange={(e, name) => handleInputChange(name || '')}
                 filterOptions={(options, params) => {
