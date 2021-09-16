@@ -32,7 +32,6 @@ const TVShowSearch = (props) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleInputChange = async (param) => {
-        console.log(param)
         dispatch(changeSearchParam(param));
     };
 
