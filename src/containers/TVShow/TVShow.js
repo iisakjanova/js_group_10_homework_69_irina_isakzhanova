@@ -70,7 +70,7 @@ const TVShow = ({match}) => {
                     ?
                     <>
                         <TVShowSearch
-                            value={state.selectedShow || state.info.name}
+                            value={state.info.name}
                         />
                         <Grid container direction="row" spacing={4} className={classes.content}>
                             <Grid item>

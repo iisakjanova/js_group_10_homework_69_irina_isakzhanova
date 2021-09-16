@@ -61,9 +61,6 @@ const TVShowSearch = (props) => {
             const shows = await getShows();
             dispatch(addTVShowsList(shows));
         })();
-        return () => {
-
-        }
     }, [getShows]);
 
     return (
