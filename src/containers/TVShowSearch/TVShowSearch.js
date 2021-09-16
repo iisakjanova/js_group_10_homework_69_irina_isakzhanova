@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useReducer} from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import {Grid, makeStyles, Typography} from "@material-ui/core";
+import {useHistory} from 'react-router-dom';
 
 import {reducer} from "../../store/reduser";
 import {addSearchParam, addTVShowsList, selectTVShow} from "../../store/actions";
@@ -27,6 +28,7 @@ const filter = createFilterOptions();
 
 const TVShowSearch = () => {
     const classes = useStyles();
+    const history = useHistory();
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -34,8 +36,9 @@ const TVShowSearch = () => {
         dispatch(addSearchParam(param));
     };
 
-    const handleSelectName = (name) => {
-        dispatch(selectTVShow(name));
+    const handleSelectShow = value => {
+        dispatch(selectTVShow(value));
+        history.push(`/shows/${value.show.id}`);
     };
 
     const getShows = useCallback( async () => {
@@ -65,7 +68,7 @@ const TVShowSearch = () => {
             <Autocomplete
                 inputValue={state.searchParam}
                 value={state.selectedShow}
-                onChange={(e, value) => handleSelectName(value || '')}
+                onChange={(e, value) => handleSelectShow(value || '')}
                 onInputChange={(e, name) => handleInputChange(name || '')}
                 filterOptions={(options, params) => {
                     return filter(options, params);
