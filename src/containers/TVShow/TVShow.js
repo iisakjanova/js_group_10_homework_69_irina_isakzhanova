@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useReducer} from 'react';
-import {Backdrop, CircularProgress, Grid, makeStyles} from "@material-ui/core";
+import {Backdrop, CircularProgress, Grid, makeStyles, Typography} from "@material-ui/core";
 
 import {reducer} from "../../store/reduser";
 import axiosApi from "../../axiosApi";
@@ -13,6 +13,9 @@ const useStyles = makeStyles(theme => ({
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
     },
+    content: {
+        flexWrap: "nowrap",
+    }
 }));
 
 const initialState = {
@@ -50,13 +53,34 @@ const TVShow = ({match}) => {
             dispatch(addTVShowInfo(info));
         })();
     }, [getShowInfo]);
+
     return (
-        <Grid container className={classes.root}>
-            <Backdrop className={classes.backdrop} open={state.loading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
-            TVShow
-        </Grid>
+        <div className={classes.root}>
+            {state.loading
+                ?
+                <Backdrop className={classes.backdrop} open={state.loading}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+                :
+                state.info
+                    ?
+                    <Grid container direction="row" spacing={2} className={classes.content}>
+                        <Grid item>
+                            <img src={state.info.image.medium} alt={state.info.name} />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h4">{state.info.name}</Typography>
+                            <div dangerouslySetInnerHTML={{ __html: state.info.summary }} />
+                            <Typography variant="subtitle1"><b>Language: </b> {state.info.language}</Typography>
+                            <Typography variant="subtitle1"><b>Rating: </b> {state.info.rating.average}</Typography>
+                            <Typography variant="subtitle1"><b>Country: </b> {state.info.network.country.name}</Typography>
+                            <Typography variant="subtitle1"><b>Official site: </b> <a href={state.info.officialSite}>{state.info.officialSite}</a></Typography>
+                        </Grid>
+                    </Grid>
+                    :
+                    null
+            }
+        </div>
     );
 };
 
